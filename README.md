@@ -1,4 +1,4 @@
-# Ewr-ShAn-Bot
+# ShAn.s-Bot
 
 ## Original Source Code
 - **GitHub Repository:** [https://github.com/ntkhang03/Goat-Bot-V2](https://github.com/ntkhang03/Goat-Bot-V2)
@@ -27,9 +27,9 @@ A custom Facebook API has been used to fix and improve the bot's functionality.
 
 ## Troubleshooting
 For any issues or support:
-- **Telegram:** [Telegram](https://telegram.me/si_rana252)
-- **Facebook:** [Facebook](https://www.facebook.com/sirana252)
-- **Instagram:** [Instagram](https://www.instagram.com/sirana252)
+- **Telegram:** [Telegram](https://telegram.me/sh4n.dev)
+- **Facebook:** [Facebook](https://www.facebook.com/Sh4n.Dev)
+- **Instagram:** [Instagram](https://www.instagram.com/sh4n.dev)
 
 ## Additional Resources
 - **C3C Files Download:** [Download Here](https://drive.google.com/file/d/1-MWoTyqES-V4H-QAIQDiC34-XMKju8hA/view?usp=drivesdk)
