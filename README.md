@@ -31,6 +31,9 @@ For any issues or support:
 - **Facebook:** [Facebook](https://www.facebook.com/Sh4n.Dev)
 - **Instagram:** [Instagram](https://www.instagram.com/sh4n.dev)
 
+- ## How to Setup
+- [YouTube](youtube.com/Sh4nDev)
+
 ## Additional Resources
 - **C3C Files Download:** [Download Here](https://drive.google.com/file/d/1-MWoTyqES-V4H-QAIQDiC34-XMKju8hA/view?usp=drivesdk)
 
