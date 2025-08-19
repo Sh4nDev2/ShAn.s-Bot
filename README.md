@@ -27,7 +27,7 @@ A custom Facebook API has been used to fix and improve the bot's functionality.
 
 ## Troubleshooting
 For any issues or support:
-- **Telegram:** [Telegram](https://telegram.me/sh4n.dev)
+- **Telegram:** [Telegram](https://telegram.me/sh4ndev)
 - **Facebook:** [Facebook](https://www.facebook.com/Sh4n.Dev)
 - **Instagram:** [Instagram](https://www.instagram.com/sh4n.dev)
 
