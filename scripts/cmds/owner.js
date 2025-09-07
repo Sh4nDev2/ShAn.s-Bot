@@ -1,4 +1,3 @@
-const { GoatWrapper } = require('fca-liane-utils');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
@@ -22,7 +21,7 @@ module.exports = {
 				Birthday: '10-𝟎𝟕-𝟐𝟎𝟎5',
 				religion: '𝙄𝒔𝒍𝑨𝒎',
 				hobby: '𝑺𝒍𝒆𝒆𝑷𝒊𝒏𝑮',
-				Fb: 'https://www.facebook.com/sirana252',
+				Fb: 'https://www.facebook.com/Sh4n.Dev',
 				Relationship: '𝑺𝒊𝒏𝑮𝒆𝒍',
 				Height: '5"3'
 			};
@@ -55,7 +54,6 @@ module.exports = {
 				body: response,
 				attachment: fs.createReadStream(videoPath)
 			}, event.threadID, event.messageID);
-
 			fs.unlinkSync(videoPath);
 
 			api.setMessageReaction('😍', event.messageID, (err) => {}, true);
@@ -66,5 +64,9 @@ module.exports = {
 	}
 };
 
-const wrapper = new GoatWrapper(module.exports);
-wrapper.applyNoPrefix({ allowPrefix: true });
+  onChat: async function ({ api, event }) {
+    if (event.body && event.body.toLowerCase() === "owner") {
+      this.onStart({ api, event });
+    }
+  }
+};
