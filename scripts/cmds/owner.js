@@ -54,6 +54,7 @@ module.exports = {
 				body: response,
 				attachment: fs.createReadStream(videoPath)
 			}, event.threadID, event.messageID);
+			
 			fs.unlinkSync(videoPath);
 
 			api.setMessageReaction('😍', event.messageID, (err) => {}, true);
@@ -61,12 +62,11 @@ module.exports = {
 			console.error('Error in ownerinfo command:', error);
 			return api.sendMessage('An error occurred while processing the command.', event.threadID);
 		}
-	}
-},
+	},
 
-  onChat: async function ({ api, event }) {
-    if (event.body && event.body.toLowerCase() === "owner") {
-      this.onStart({ api, event });
-    }
-  }
+	onChat: async function ({ api, event }) {
+		if (event.body && event.body.toLowerCase() === "owner") {
+			this.onStart({ api, event });
+		}
+	}
 };
