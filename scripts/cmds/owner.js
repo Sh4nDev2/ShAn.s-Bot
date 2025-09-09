@@ -62,7 +62,7 @@ module.exports = {
 			return api.sendMessage('An error occurred while processing the command.', event.threadID);
 		}
 	}
-};
+},
 
   onChat: async function ({ api, event }) {
     if (event.body && event.body.toLowerCase() === "owner") {
