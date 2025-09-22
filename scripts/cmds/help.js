@@ -63,7 +63,7 @@ module.exports = {
       msg += `\n🔹 𝘽𝙊𝙏 𝙊𝙒𝙉𝙀𝙍 🔹`;
       msg += `\n 	 					`;
       msg += `\n~𝙉𝘼𝙈𝙀:✰ '𝗘𝘄'𝗿 𝗦𝗵𝗔𝗻'𝘀 ✰`;
-      msg += `\n~𝙁𝘽:https://m.facebook.com/sirana252`;
+      msg += `\n~𝙁𝘽: m.me/Sh4n.Dev1`;
 
       await message.reply({
         body: msg,
