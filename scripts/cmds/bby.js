@@ -1,11 +1,5 @@
 const axios = require("axios");
-
-const getAPIBase = async () => {
-  const { data } = await axios.get(
-    "https://raw.githubusercontent.com/EwrShAn25/ShAn.s-Api/refs/heads/main/Api.json"
-  );
-  return data.shan;
-};
+const { ShAnBaby, ShAnBteach, ShAnBmsg, ShAnBlist, ShAnBedit, ShAnBdelete } = require('shan-server')
 
 const cError = (api, threadID, messageID) =>
   api.sendMessage("SH AN er api off 🦆💨", threadID, messageID);
@@ -28,9 +22,6 @@ module.exports.config = {
 
 module.exports.onStart = async ({ api, event, args, usersData }) => {
   const { threadID, messageID, senderID } = event;
-  const ShAn = await getAPIBase();
-  if (!ShAn) return cError(api, threadID, messageID);
-  
   
   if (args.length === 0) {
     return api.sendMessage("Please provide text or teach the bot!", threadID, messageID);
@@ -47,9 +38,7 @@ module.exports.onStart = async ({ api, event, args, usersData }) => {
 
       const answerArray = answers.split(",").map(ans => ans.trim()).filter(ans => ans !== "");
 
-      const res = await axios.get(
-        `${ShAn}/ShAn-bteach?ask=${encodeURIComponent(ask)}&ans=${encodeURIComponent(answerArray.join(","))}&uid=${senderID}&font=3`
-      );
+      const res = await ShAnBteach(ask, answerArray.join(","), senderID, 3, this.config.author);
 
       let msg = "";
       //if add rewards
@@ -57,25 +46,25 @@ module.exports.onStart = async ({ api, event, args, usersData }) => {
     const userData = await usersData.get(senderID);
     const name = userData?.name || "User";*/
 
-    switch (res.data?.status) {
+    switch (res.status) {
       case "Already Exists":
-        msg = res.data.ShAn;
+        msg = res.ShAn;
         break;
 
       case "Partial Success":
         //await usersData.set(senderID, { ...userData, money: (userData.money || 0) + reward });
-        msg = res.data.ShAn; /*+
+        msg = res.ShAn; /*+
                       `\n🎉 Hey ${name} you win 5k coins! 💰`*/
         break;
 
       case "Success":
         //await usersData.set(senderID, { ...userData, money: (userData.money || 0) + reward });
-        msg = res.data.ShAn /*+
+        msg = res.ShAn /*+
                       `🎉 Hey ${name} you win 5k coins! 💰`*/
         break;
 
       default:
-        msg = res.data?.ShAn || "❌ Teaching failed.";
+        msg = res.ShAn || "❌ Teaching failed.";
     }
 
     return api.sendMessage(msg, threadID, messageID);
@@ -85,21 +74,17 @@ module.exports.onStart = async ({ api, event, args, usersData }) => {
   }
 } else if (args[0] === 'msg' || args[0] === '-m') {
     try {
-      const res = await axios.get(
-        `${ShAn}/ShAn-bmsg?ask=${encodeURIComponent(input)}&uid=${senderID}&font=3`
-      );
+      const res = await ShAnBmsg(input, senderID, 3, this.config.author);
 
-      return api.sendMessage(`📜 Ask: ${res.data.ask}\n\n${res.data.ShAn}`, threadID, messageID);
+      return api.sendMessage(`📜 Ask: ${res.ask}\n\n${res.ShAn}`, threadID, messageID);
     } catch {
       return cError(api, threadID, messageID);
     }
   } else if (args[0] === 'list' || args[0] === '-l') {
     try {
-      const res = await axios.get(
-        `${ShAn}/ShAn-blist?font=3`
-      );
+      const res = await ShAnBlist(3, this.config.author);
 
-      return api.sendMessage(res.data.ShAn, threadID, messageID);
+      return api.sendMessage(res.ShAn, threadID, messageID);
     } catch {
       return cError(api, threadID, messageID);
     }
@@ -115,54 +100,51 @@ module.exports.onStart = async ({ api, event, args, usersData }) => {
       if (!isNaN(newAskOrIndex) && newAns) {
         const index = parseInt(newAskOrIndex, 10);
 
-        const res = await axios.get(
-          `${ShAn}/ShAn-bedit?ask=${encodeURIComponent(ask)}&index=${index}&newAns=${encodeURIComponent(newAns)}&uid=${senderID}&font=3`
-        );
+        const res = await ShAnBedit(ask, newAns, senderID, 3, this.config.author, index);
 
-        return api.sendMessage(res.data?.status === "Success"
+        return api.sendMessage(res.status === "Success"
           ? `✅ Successfully updated answer at index ${index} to: ${newAns}`
-          : res.data?.ShAn || "❌ Failed to update the answer!", threadID, messageID);
+          : res.ShAn || "❌ Failed to update the answer!", threadID, messageID);
       } else {
-        const res = await axios.get(
-          `${ShAn}/ShAn-bedit?ask=${encodeURIComponent(ask)}&newAsk=${encodeURIComponent(newAskOrIndex)}&uid=${senderID}&font=2`
-        );
+        const res = await ShAnBedit(ask, newAskOrIndex, senderID, 2, this.config.author);
 
-        return api.sendMessage(res.data?.status === "Success"
+        return api.sendMessage(res.status === "Success"
           ? `✅ Successfully updated question to: ${newAskOrIndex}`
-          : res.data?.ShAn || "❌ Failed to update the question!", threadID, messageID);
+          : res.ShAn || "❌ Failed to update the question!", threadID, messageID);
       }
     } catch {
       return cError(api, threadID, messageID);
     }
   } else if (args[0] === 'remove' || args[0] === '-r' || args[0] === 'delete' || args[0] === '-d') {
-    try {
-      const parts = input.split(" - ").map(part => part.trim());
+  try {
+    const parts = input.split(" - ").map(part => part.trim());
 
-      if (!parts[0]) {
-        return api.sendMessage("Invalid format. Use: {pn} delete <text> OR {pn} delete <text> - <index>", threadID, messageID);
-      }
-
-      const text = parts[0];
-      const index = parts[1] && !isNaN(parts[1]) ? parseInt(parts[1], 10) : null;
-
-      let url = `${ShAn}/ShAn-bdelete?text=${encodeURIComponent(text)}&uid=${senderID}&font=3`;
-      if (index !== null) url += `&index=${index}`;
-
-      const res = await axios.delete(url);
-
-      return api.sendMessage(res.data?.status === "Success"
-        ? `✅ Successfully deleted ${index !== null ? `answer at index ${index} of` : "all answers related to"}: ${text}`
-        : res.data?.ShAn || "❌ Failed to delete the message!", threadID, messageID);
-    } catch {
-      return cError(api, threadID, messageID);
+    if (!parts[0]) {
+      return api.sendMessage("Invalid format. Use: {pn} delete <text> OR {pn} delete <text> - <index>", threadID, messageID);
     }
+
+    const text = parts[0];
+    const index = parts[1] && !isNaN(parts[1]) ? parseInt(parts[1], 10) : null;
+
+    if (index !== null) {
+      const res = await ShAnBdelete(text, senderID, 3, this.config.author, index);
+      return api.sendMessage(res.status === "Success"
+        ? `✅ Successfully deleted answer at index ${index} of: ${text}`
+        : res.ShAn || "❌ Failed to delete the message!", threadID, messageID);
+    } else {
+      const res = await ShAnBdelete(text, senderID, 3, this.config.author);
+      return api.sendMessage(res.status === "Success"
+        ? `✅ Successfully deleted all answers related to: ${text}`
+        : res.ShAn || "❌ Failed to delete the message!", threadID, messageID);
+    }
+  } catch {
+    return cError(api, threadID, messageID);
+  }
   } else {
     try {
-      const res = await axios.get(
-        `${ShAn}/ShAn-bby?text=${encodeURIComponent(args.join(" "))}&uid=${senderID}&font=2`
-      );
-      const ans = res.data.ShAn;
-      const react = res.data.react;
+      const res = await ShAnBaby((args.join(" ")), senderID, 2, this.config.author);
+      const ans = res.ShAn;
+      const react = res.react;
 
       return api.sendMessage(ans + react, threadID, (error, info) => {
         global.GoatBot.onReply.set(info.messageID, {
@@ -194,11 +176,9 @@ module.exports.onChat = async ({ api, event }) => {
       const question = userInput.slice(userInput.indexOf(" ") + 1).trim();
 
       try {
-        const res = await axios.get(
-          `${await getAPIBase()}/ShAn-bby?text=${encodeURIComponent(question)}&uid=${senderID}&font=2`
-        );
-        const ans = res.data.ShAn;
-        const react = res.data.react;
+        const res = await ShAnBaby(question, senderID, 2, this.config.author);
+        const ans = res.ShAn;
+        const react = res.react;
 
         return api.sendMessage(ans + react, threadID, (error, info) => {
           if (!error) {
@@ -229,6 +209,7 @@ module.exports.onChat = async ({ api, event }) => {
   }
 };
 
+
 module.exports.onReply = async ({ api, event }) => {
   const { threadID, messageID, senderID, body } = event;
 
@@ -236,11 +217,9 @@ module.exports.onReply = async ({ api, event }) => {
     if (senderID == api.getCurrentUserID()) return;
 
     if (event.type == "message_reply") {
-      const res = await axios.get(
-        `${await getAPIBase()}/ShAn-bby?text=${encodeURIComponent(body)}&uid=${senderID}&font=2`
-      );
-      const ans = res.data.ShAn;
-      const react = res.data.react;
+      const res = await ShAnBaby(body, senderID, 2, this.config.author);
+      const ans = res.ShAn;
+      const react = res.react;
 
       return api.sendMessage(ans + react, threadID, (error, info) => {
         if (!error) {
