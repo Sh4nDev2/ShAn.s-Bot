@@ -26,7 +26,7 @@ module.exports = async function ({ api, threadModel, userModel, dashBoardModel, 
 				continue;
 			sendMail({
 				to: mail,
-				subject: "Report error when listen message in Goat Bot",
+				subject: "Report error when listen message in Goat Bot by ♡︎ 𝗦𝗵𝗔𝗻 ♡︎",
 				text: "",
 				html: `<h2>Has error when listen message in Goat Bot id: ${botID}</h2><div><pre style="background:#272822;position: relative;padding: 1em 0 1em 1em;"><code style="color:#272822;background:#272822;text-shadow:0 1px rgba(0,0,0,.3);font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;">${highlightCode}</code></pre></div>`
 			})
