@@ -1,5 +1,5 @@
 // set bash title by ShAn
-process.stdout.write("\x1b]2;Goat Bot V2 - Made by NTKhang\x1b\x5c");
+process.stdout.write("\x1b]2; 𝐆𝐨𝐚𝐭 𝐁𝐨𝐭 𝐕2 - 𝐌𝐚𝐝𝐞 𝐛𝐲 𝐍𝐓𝐊𝐡𝐚𝐧𝐠 & 𝐅𝐢𝐱𝐞𝐝 𝐛𝐲 ♡︎ 𝗦𝗵𝗔𝗻 ♡︎\x1b\x5c");
 const defaultRequire = require;
 
 function decode(text) {
@@ -15,7 +15,8 @@ const path = defaultRequire("path");
 const readline = defaultRequire("readline");
 const fs = defaultRequire("fs-extra");
 const toptp = defaultRequire("totp-generator");
-const login = defaultRequire(`${process.cwd()}/fb-chat-api`);
+//const login = defaultRequire(`${process.cwd()}/fb-chat-api`);
+const login = defaultRequire("ws3-fca");
 const qr = new (defaultRequire("qrcode-reader"));
 const Canvas = defaultRequire("canvas");
 const https = defaultRequire("https");
@@ -80,7 +81,7 @@ const titles = [
 		"G O A T B O T  V 2 @" + currentVersion
 	],
 	[
-		"GOATBOT V2"
+		""
 	]
 ];
 const maxWidth = process.stdout.columns;
@@ -98,7 +99,7 @@ for (const text of title) {
 	const textColor = gradient("#FA8BFF", "#2BD2FF", "#2BFF88")(text);
 	centerText(textColor, text.length);
 }
-let subTitle = `GoatBot V2@${currentVersion}- A simple Bot chat messenger use personal account`;
+let subTitle = `• 𝐕𝐞𝐫𝐬𝐢𝐨𝐧 @${currentVersion}`;
 const subTitleArray = [];
 if (subTitle.length > maxWidth) {
 	while (subTitle.length > maxWidth) {
@@ -112,14 +113,14 @@ if (subTitle.length > maxWidth) {
 else {
 	subTitleArray.push(subTitle);
 }
-const author = ("Created by NTKhang with ♡");
-const srcUrl = ("Source code: https://github.com/ntkhang03/Goat-Bot-V2");
-const fakeRelease = ("ALL VERSIONS NOT RELEASED HERE ARE FAKE");
+const modified = ("• 𝐌𝐨𝐝𝐢𝐟𝐢𝐞𝐝 & 𝐟𝐜𝐚 𝐟𝐢𝐱 𝐛𝐲 ♡︎ 𝗦𝗵𝗔𝗻 ♡︎");
+const srcUrl = ("• 𝐒𝐨𝐮𝐫𝐜𝐞 𝐜𝐨𝐝𝐞: https://github.com/ntkhang03/Goat-Bot-V2");
+const fakeRelease = ("𝐀𝐋𝐋 𝐕𝐄𝐑𝐒𝐈𝐎𝐍𝐒 𝐍𝐎𝐓 𝐑𝐄𝐋𝐄𝐀𝐒𝐄𝐃 𝐇𝐄𝐑𝐄 𝐀𝐑𝐄 𝐅𝐀𝐊𝐄");
 for (const t of subTitleArray) {
 	const textColor2 = gradient("#9F98E8", "#AFF6CF")(t);
 	centerText(textColor2, t.length);
 }
-centerText(gradient("#9F98E8", "#AFF6CF")(author), author.length);
+centerText(gradient("#9F98E8", "#AFF6CF")(modified), modified.length);
 centerText(gradient("#9F98E8", "#AFF6CF")(srcUrl), srcUrl.length);
 centerText(gradient("#f5af19", "#f12711")(fakeRelease), fakeRelease.length);
 
@@ -491,11 +492,11 @@ async function getAppStateToLogin(loginWithEmail) {
 					}))
 					.filter(i => i.key && i.value && i.key != "x-referer");
 			}
-			if (!await checkLiveCookie(appState.map(i => i.key + "=" + i.value).join("; "), facebookAccount.userAgent)) {
-				const error = new Error("Cookie is invalid");
-				error.name = "COOKIE_INVALID";
-				throw error;
-			}
+			//if (!await checkLiveCookie(appState.map(i => i.key + "=" + i.value).join("; "), facebookAccount.userAgent)) {
+				//const error = new Error("Cookie is invalid");
+				//error.name = "COOKIE_INVALID";
+				//throw error;
+			//}
 		}
 	}
 	catch (err) {
@@ -1004,12 +1005,16 @@ async function startBot(loginWithEmail) {
 					&& global.GoatBot.config.whiteListModeThread?.enable == true
 					// admin
 					&& !global.GoatBot.config.adminBot.includes(event.senderID)
+					// owner 
+					&& !global.GoatBot.config.owner.includes(event.senderID)
 				) {
 					if (
 						!global.GoatBot.config.whiteListMode.whiteListIds.includes(event.senderID)
 						&& !global.GoatBot.config.whiteListModeThread.whiteListThreadIds.includes(event.threadID)
 						// admin
 						&& !global.GoatBot.config.adminBot.includes(event.senderID)
+						// owner 
+					    && !global.GoatBot.config.owner.includes(event.senderID)
 					)
 						return;
 				}
@@ -1018,6 +1023,8 @@ async function startBot(loginWithEmail) {
 					&& !global.GoatBot.config.whiteListMode.whiteListIds.includes(event.senderID)
 					// admin
 					&& !global.GoatBot.config.adminBot.includes(event.senderID)
+					// owner 
+					&& !global.GoatBot.config.owner.includes(event.senderID)
 				)
 					return;
 				else if (
@@ -1025,6 +1032,8 @@ async function startBot(loginWithEmail) {
 					&& !global.GoatBot.config.whiteListModeThread.whiteListThreadIds.includes(event.threadID)
 					// admin
 					&& !global.GoatBot.config.adminBot.includes(event.senderID)
+					// owner 
+					&& !global.GoatBot.config.owner.includes(event.senderID)
 				)
 					return;
 
