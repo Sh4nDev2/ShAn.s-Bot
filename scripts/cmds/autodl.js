@@ -1,113 +1,92 @@
+const { ShAnAlldl } = require("shan-server");
 const axios = require("axios");
 
-const dApi = async () => {
-  const base = await axios.get(
-    "https://raw.githubusercontent.com/Sh4nDev/ShAn.s-Api/refs/heads/main/Api.json"
-  );
-  return base.data.shan;
-};
+module.exports = {
+  config: {
+    name: "autodl",
+    version: "1.0",
+    role: 0,
+    usePrefix: false,
+    author: "♡︎ 𝗦𝗵𝗔𝗻 ♡︎",
+    shortDescription: {
+      en: "Auto download videos"
+    },
+    category: "media"
+  },
 
-module.exports.config = {
-  name: "autodl",
-  version: "1.6.9",
-  author: "♡︎ 𝗦𝗵𝗔𝗻 ♡︎",
-  role: 0,
-  description: "Automatically download videos from supported platforms!",
-  category: "𝗠𝗘𝗗𝗜𝗔",
-  countDown: 10,
-  guide: {
-    en: "Send a valid video link from supported platforms (TikTok, Facebook, YouTube, Twitter, Instagram, etc.), and the bot will download it automatically.",
-  },
-};
-module.exports.onStart = ({}) => {};
-
-const platforms = {
-  TikTok: {
-    regex: /(?:https?:\/\/)?(?:www\.)?tiktok\.com/,
-    endpoint: "/ShAn-tikDL?url=",
-  },
-  Facebook: {
-    regex: /(?:https?:\/\/)?(?:www\.)?(facebook\.com|fb\.watch|facebook\.com\/share\/v)/,
-    endpoint: "/ShAn-fbDL?url=",
-  },
-  YouTube: {
-    regex: /(?:https?:\/\/)?(?:www\.)?(youtube\.com|youtu\.be)/,
-    endpoint: "/ShAn-ytDL?url=",
-  },
-  Twitter: {
-    regex: /(?:https?:\/\/)?(?:www\.)?x\.com/,
-    endpoint: "/ShAn-alldl?url=",
-  },
-  Instagram: {
-    regex: /(?:https?:\/\/)?(?:www\.)?instagram\.com/,
-    endpoint: "/ShAn-instaDL?url=",
-  },
-};
-
-const detectPlatform = (url) => {
-  for (const [platform, data] of Object.entries(platforms)) {
-    if (data.regex.test(url)) {
-      return { platform, endpoint: data.endpoint };
+  onStart: async function({ args, message, event, threadsData }) {
+    const inputStatus = args[0];
+    
+    if (!inputStatus) {
+      const data = (await threadsData.get(event.threadID, "data")) || {};
+      const current = data.autodl === "on" ? "ON ✅" : "OFF ❌";
+      return message.send(`• Auto-download is currently: ${current}\n\nUsage: autodl on/off`);
     }
-  }
-  return null;
-};
-
-const downloadVideo = async (apiUrl, url) => {
-  const match = detectPlatform(url);
-  if (!match) {
-    throw new Error("No matching platform for the provided URL.");
-  }
-
-  const { platform, endpoint } = match;
-  const endpointUrl = `${apiUrl}${endpoint}${encodeURIComponent(url)}`;
-  console.log(`🔗 Fetching from: ${endpointUrl}`);
-
-  try {
-    const res = await axios.get(endpointUrl);
-    console.log(`✅ API Response:`, res.data);
-
-    // Updated to match the new API response format
-    const videoUrl = res.data?.videoUrl;
-    if (videoUrl) {
-      return { 
-        downloadUrl: videoUrl, 
-        platform: res.data.platform || platform // Use API's platform if available
-      };
+    
+    if (role < 1) {
+      return message.reply("𝐎𝐩𝐩𝐬𝐬 𝐛𝐚𝐏𝐲 𝐲𝐨𝐮 𝐡𝐚𝐯𝐞 𝐧𝐨 𝐩𝐞𝐫𝐦𝐢𝐬𝐬𝐢𝐨𝐧")   
     }
-  } catch (error) {
-    console.error(`❌ Error fetching data from ${endpointUrl}:`, error.message);
-    throw new Error("Download link not found.");
-  }
-  throw new Error("No video URL found in the API response.");
-};
+      
+    if (!["on", "off"].includes(inputStatus)) {
+      return message.reply("❌ Invalid command\n✓ Use: autodl on/off");
+    }
+    const tData = (await threadsData.get(event.threadID, "data")) || {};
+    const currentStatus = tData.autodl;
+    
+    if (currentStatus === inputStatus) {
+      if (inputStatus === "on") {
+        return message.send("⚠️ Auto-download is already ON for this thread");
+      } else {
+        return message.send("⚠️ Auto-download is already OFF for this thread");
+      }
+    }
+    tData.autodl = inputStatus;
+    await threadsData.set(event.threadID, tData, "data");
+    
+    if (inputStatus === "on") {
+      return message.send("✅ Auto-download has been TURNED ON for this thread");
+    } else {
+      return message.send("❌ Auto-download has been TURNED OFF for this thread");
+    }
+  },
 
-module.exports.onChat = async ({ api, event }) => {
-  const { body, threadID, messageID } = event;
+  onChat: async function({ event, message, threadsData }) {
+    const settings = (await threadsData.get(event.threadID, "data")) || {};
+    const isAutoDLEnabled = settings.autodl !== "off";
+    
+    if (!isAutoDLEnabled) return;
+    
+    const content = event.body || "";
+    
+    const urlPattern = /(https?:\/\/)?(www\.)?(tiktok\.com|vt\.tiktok\.com|instagram\.com|instagr\.am|pin\.it|pinterest\.com|youtu\.be|youtube\.com|twitter\.com|x\.com|facebook\.com|fb\.watch|fb\.me|capcut\.com|likee\.com|likee\.video|l\.likee\.video|threads\.com|threads\.net)\/[^\s]+/gi;
+    
+    const urls = content.match(urlPattern);
+    
+    if (!urls) return;
+    
+    for (const url of urls.slice(0, 3)) {
+      try {
+        const res = await ShAnAlldl(url, this.config.author);
 
-  if (!body) return;
-
-  const urlMatch = body.match(/https?:\/\/[^\s]+/);
-  if (!urlMatch) return;
-  
-  const url = urlMatch[0];
-
-  const platformMatch = detectPlatform(url);
-  if (!platformMatch) return;
-  try {
-    const apiUrl = await dApi();
-    const { downloadUrl, platform } = await downloadVideo(apiUrl, url);
-
-    const videoStream = await axios.get(downloadUrl, { responseType: "stream" });
-    api.sendMessage(
-      {
-        body: `✅ Successfully downloaded the video!\n🔖 Platform: ${platform}\n😜Power by Ew'r ShAn's😪`,
-        attachment: [videoStream.data],
-      },
-      threadID,
-      messageID
-    );
-  } catch (error) {
-    console.error(`❌ Error while processing the URL:`, error.message);
+        if (res.status !=="success") {
+          throw new Error("api failed"); 
+        }
+        
+        const videoStream = await axios.get(res.ShAn, { 
+          responseType: "stream",
+          timeout: 30000
+        });
+        await message.reaction("✔️", event.messageID);
+        
+        await message.reply({
+          body: res.msg,
+          attachment: videoStream.data
+        });
+        
+      } catch (error) {
+        await message.reaction("❌️", event.messageID);
+        console.error("Auto-download error:", error);
+      }
+    }
   }
 };
