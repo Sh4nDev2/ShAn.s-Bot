@@ -1,1 +1,83 @@
-[ Your Facebook cookies ]
+[
+	{
+		"key": "datr",
+		"value": "pNiKatdrBWTO44LbNdr4wMlg",
+		"domain": "facebook.com",
+		"path": "/",
+		"hostOnly": false,
+		"creation": "2026-08-23T13:20:56.415Z",
+		"lastAccessed": "2026-08-23T13:20:56.415Z"
+	},
+	{
+		"key": "sb",
+		"value": "pNiKaghJZO8iW1a2MwAbbI19",
+		"domain": "facebook.com",
+		"path": "/",
+		"hostOnly": false,
+		"creation": "2026-08-23T13:20:56.415Z",
+		"lastAccessed": "2026-08-23T13:20:56.415Z"
+	},
+	{
+		"key": "locale",
+		"value": "en_US",
+		"domain": "facebook.com",
+		"path": "/",
+		"hostOnly": false,
+		"creation": "2026-08-23T13:20:56.415Z",
+		"lastAccessed": "2026-08-23T13:20:56.415Z"
+	},
+	{
+		"key": "c_user",
+		"value": "61589388903752",
+		"domain": "facebook.com",
+		"path": "/",
+		"hostOnly": false,
+		"creation": "2026-08-23T13:20:56.415Z",
+		"lastAccessed": "2026-08-23T13:20:56.415Z"
+	},
+	{
+		"key": "xs",
+		"value": "34%3AVgC00I3DfoPDBw%3A2%3A1787485162%3A-1%3A-1",
+		"domain": "facebook.com",
+		"path": "/",
+		"hostOnly": false,
+		"creation": "2026-08-23T13:20:56.415Z",
+		"lastAccessed": "2026-08-23T13:20:56.415Z"
+	},
+	{
+		"key": "pas",
+		"value": "61589388903752%3AlG6Y5VGJiA",
+		"domain": "facebook.com",
+		"path": "/",
+		"hostOnly": false,
+		"creation": "2026-08-23T13:20:56.415Z",
+		"lastAccessed": "2026-08-23T13:20:56.415Z"
+	},
+	{
+		"key": "dpr",
+		"value": "2.15625",
+		"domain": "facebook.com",
+		"path": "/",
+		"hostOnly": false,
+		"creation": "2026-08-23T13:20:56.415Z",
+		"lastAccessed": "2026-08-23T13:20:56.415Z"
+	},
+	{
+		"key": "wd",
+		"value": "980x1984",
+		"domain": "facebook.com",
+		"path": "/",
+		"hostOnly": false,
+		"creation": "2026-08-23T13:20:56.415Z",
+		"lastAccessed": "2026-08-23T13:20:56.415Z"
+	},
+	{
+		"key": "fr",
+		"value": "0BU0bL4aiqgjDcsFw.AWd3Qz8DAh8sbERX1OR8Y0lZ19Ne6TOpbiVLr9wyQ3W7wA1fjxo.Bqitik..AAA.0.0.BqivOk.AWcsq2AwDfdMDO-RsdSUNgsgFkY",
+		"domain": "facebook.com",
+		"path": "/",
+		"hostOnly": false,
+		"creation": "2026-08-23T13:20:56.415Z",
+		"lastAccessed": "2026-08-23T13:20:56.415Z"
+	}
+]
