@@ -49,7 +49,7 @@
 "socket.io": "^4.5.1",
 "sqlite3": "^5.0.5",
 "tinyurl": "^1.1.7",
-"shan-fca": "^1.3.0",
+"shan-fca": "^1.3.1",
 "totp-generator": "^0.0.13",
 "websocket-stream": "^5.5.2"
 },
