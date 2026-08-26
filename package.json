@@ -56,7 +56,8 @@
 "scripts": {
 "start": "set NODE_ENV=&& node index.js",
 "dev": "set NODE_ENV=development&& node index.js",
-"prod": "set NODE_ENV=production&& node index.js"
+"prod": "set NODE_ENV=production&& node index.js",
+"build:go": "go build -o build/messagix.so ./src/native || echo 'Go not installed, skipping native build'"
 },
 "author": "NTKhang",
 "license": "MIT",
